@@ -1,3 +1,5 @@
+certs
+__pycache__
 .terraform*
 terraform.tfstate
 terraform.tfstate.backup

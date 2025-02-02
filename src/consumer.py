@@ -2,6 +2,7 @@ import os
 import dotenv
 import json
 from confluent_kafka import Consumer, KafkaException
+from clickstream_db import write_to_db
 import settings
 
 dotenv.load_dotenv()
@@ -35,6 +36,9 @@ def main():
             # Decode JSON message
             event = json.loads(msg.value().decode("utf-8"))
             print(f"Received event: {event}")
+
+            # Push the data to PG
+            write_to_db(event)
 
     except KeyboardInterrupt:
         print("\nStopping consumer...")

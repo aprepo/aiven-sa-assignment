@@ -80,4 +80,4 @@ def produce_events(num_events=100, interval:float=1):
 if __name__ == "__main__":
     print(f"Server connection: {KAFKA_BOOTSTRAP_SERVERS}")
     print("Producing clickstream data...")
-    produce_events(num_events=50, interval=0.5)
+    produce_events(num_events=500, interval=0.5)

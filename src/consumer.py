@@ -3,6 +3,7 @@ import dotenv
 import json
 from confluent_kafka import Consumer, KafkaException
 from clickstream_db import write_to_db
+from clickstream_os import write_to_os
 import settings
 
 dotenv.load_dotenv()
@@ -39,6 +40,9 @@ def main():
 
             # Push the data to PG
             write_to_db(event)
+
+            # Push the data to OpenSearch
+            write_to_os(event)
 
     except KeyboardInterrupt:
         print("\nStopping consumer...")

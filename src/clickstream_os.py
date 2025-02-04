@@ -1,11 +1,12 @@
 import os
 import dotenv
 from opensearchpy import OpenSearch
+import settings
 
 dotenv.load_dotenv()
 
 _client = None
-OPENSEARCH_INDEX = os.getenv("OPENSEARCH_INDEX")
+#OPENSEARCH_INDEX = os.getenv("OPENSEARCH_INDEX")
 
 def get_os_client():
     global _client
@@ -26,9 +27,5 @@ def get_os_client():
 
 def write_to_os(event):
     client = get_os_client()
-    print(event)
-    if client is None:
-        print("OpenSearch client not initialized")
-        return
-    response = client.index(index=OPENSEARCH_INDEX, body=event)
+    response = client.index(index=settings.OPENSEARCH_INDEX, body=event)
     print(f"Indexed to OpenSearch: {response['_id']}")

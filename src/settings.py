@@ -10,3 +10,6 @@ KAFKA_GROUP_ID = "clickstream-consumer-group"
 # Pages used for the fake data
 PAGES = ["home.html", "admin.html", "user.html", "billing.html"]
 SITES = ["https://killerapp.io/", "https://social.network.com/"]
+
+# Opensearch settings
+OPENSEARCH_INDEX = "clickstream"

@@ -4,9 +4,14 @@ import json
 from confluent_kafka import Consumer, KafkaException
 from clickstream_db import write_to_db
 from clickstream_os import write_to_os
+from clickstream_accumulator import ClickStreamAccumulator
 import settings
+from clickstream_db import write_session_stats_to_db
 
 dotenv.load_dotenv()
+dotenv.load_dotenv('../.env-kafka', override=True)
+dotenv.load_dotenv('../.env-pg', override=True)
+dotenv.load_dotenv('../.env-opensearch', override=True)
 
 # Kafka Consumer configuration
 consumer_conf = {
@@ -26,6 +31,9 @@ def main():
 
     print(f"Listening for messages on topic: {settings.KAFKA_TOPIC}")
 
+    # Initialize the ClickStreamAccumulator for tracking session stats
+    accumulator = ClickStreamAccumulator()
+
     try:
         while True:
             msg = consumer.poll(timeout=1.0)  # Wait for message
@@ -38,12 +46,16 @@ def main():
             event = json.loads(msg.value().decode("utf-8"))
             print(f"Received event: {event}")
 
-            # Push the data to PG
+            # Push the raw event data to PG
             write_to_db(event)
 
-            # Push the data to OpenSearch
+            # Push the raw event data to OpenSearch
             write_to_os(event)
 
+            # As an example, calculate the event statistics and store them in the database
+            accumulator.add_event(event)
+            stats = accumulator.get_session_stats(event['session_id'])
+            write_session_stats_to_db(event['session_id'], stats)
     except KeyboardInterrupt:
         print("\nStopping consumer...")
     finally:

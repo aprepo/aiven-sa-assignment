@@ -4,7 +4,7 @@ SSL_CERT_FILE="../certs/service.cert"
 SSL_KEY_FILE="../certs/service.key"
 
 # Kafka topic settings
-KAFKA_TOPIC = "faker-clickstream"
+KAFKA_TOPIC = "clickstream"
 KAFKA_GROUP_ID = "clickstream-consumer-group"
 
 # Pages used for the fake data

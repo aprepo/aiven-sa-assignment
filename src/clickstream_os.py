@@ -3,10 +3,9 @@ import dotenv
 from opensearchpy import OpenSearch
 import settings
 
-dotenv.load_dotenv()
+dotenv.load_dotenv('../.env-opensearch', override=True)
 
 _client = None
-#OPENSEARCH_INDEX = os.getenv("OPENSEARCH_INDEX")
 
 def get_os_client():
     global _client

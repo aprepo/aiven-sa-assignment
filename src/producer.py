@@ -8,10 +8,15 @@ from faker import Faker
 from confluent_kafka import Producer
 import settings
 
+# Load the secrets from .env files
 dotenv.load_dotenv()
+dotenv.load_dotenv('../.env-kafka', override=True)
+dotenv.load_dotenv('../.env-pg', override=True)
 
 # Kafka configuration
-KAFKA_BOOTSTRAP_SERVERS = os.environ.get('KAFKA_BOOTSTRAP_SERVERS')
+KAFKA_BOOTSTRAP_SERVERS = os.environ.get('KAFKA_BOOTSTRAP_SERVERS', None)
+if KAFKA_BOOTSTRAP_SERVERS is None:
+    raise ValueError("KAFKA_BOOTSTRAP_SERVERS is not set")
 
 # Create a Faker instance for generating fake user data
 faker = Faker()

@@ -3,16 +3,10 @@ import dotenv
 import psycopg2
 from psycopg2.extras import execute_values
 
-dotenv.load_dotenv()
+dotenv.load_dotenv('../.env-pg', override=True)
 
 def get_db_connection():
-    conn = psycopg2.connect(
-        host=os.environ.get('AIVEN_PG_HOST'),
-        port=os.environ.get('AIVEN_PG_PORT'),
-        dbname=os.environ.get('AIVEN_PG_DB_NAME'),
-        user=os.environ.get('AIVEN_PG_USER'),
-        password=os.environ.get('AIVEN_PG_PASSWORD')
-    )
+    conn = psycopg2.connect(os.environ.get("AIVEN_PG_URI"))
     return conn
 
 def write_to_db(event):
@@ -49,7 +43,38 @@ def write_to_db(event):
         )
     ]
 
-    execute_values(cursor, insert_query, values)
-    conn.commit()
-    cursor.close()
-    conn.close()
+    try:
+        execute_values(cursor, insert_query, values)
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()
+
+def write_session_stats_to_db(session_id, stats):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    upsert_query = """
+    INSERT INTO clickstream_session_stats (
+        session_id,
+        page_views,
+        button_clicks
+    ) VALUES (%s, %s, %s)
+    ON CONFLICT (session_id) DO UPDATE SET
+        page_views = EXCLUDED.page_views,
+        button_clicks = EXCLUDED.button_clicks
+    """
+
+    try:
+        cursor.execute(
+            upsert_query,
+            (
+                session_id,
+                stats['page_views'],
+                stats['button_clicks']
+            )
+        )
+        conn.commit()
+    finally:
+        cursor.close()
+        conn.close()

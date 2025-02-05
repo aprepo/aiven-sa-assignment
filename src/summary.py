@@ -7,6 +7,7 @@ from tabulate import tabulate
 dotenv.load_dotenv()
 
 def get_db_connection():
+    print(f"Connecting to {os.environ.get('AIVEN_PG_HOST')}")
     conn = psycopg2.connect(
         host=os.environ.get('AIVEN_PG_HOST'),
         port=os.environ.get('AIVEN_PG_PORT'),

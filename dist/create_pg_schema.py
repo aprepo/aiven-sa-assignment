@@ -2,7 +2,7 @@ import os
 import dotenv
 import psycopg2
 
-dotenv.load_dotenv()
+dotenv.load_dotenv('../.env-pg', override=True)
 
 # Database connection details
 DB_HOST = os.getenv("AIVEN_PG_HOST")
@@ -17,11 +17,7 @@ def execute_sql_file(filename):
     try:
         # Connect to PostgreSQL
         conn = psycopg2.connect(
-            dbname=DB_NAME,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            host=DB_HOST,
-            port=DB_PORT,
+            os.getenv("AIVEN_PG_URI"),
             sslmode="require"  # Aiven requires SSL
         )
         cur = conn.cursor()

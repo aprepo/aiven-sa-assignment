@@ -23,3 +23,10 @@ CREATE UNIQUE INDEX clickstream_event_idx ON clickstream_events (event_id, times
 
 -- Add indexes for performance
 CREATE INDEX ON clickstream_events (timestamp DESC);
+
+-- Create a table for session stats calculated by the kafka consumer script
+CREATE TABLE IF NOT EXISTS clickstream_session_stats (
+    session_id UUID PRIMARY KEY,
+    page_views BIGINT NOT NULL,
+    button_clicks BIGINT NOT NULL
+);

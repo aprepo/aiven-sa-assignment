@@ -6,7 +6,14 @@ from psycopg2.extras import execute_values
 dotenv.load_dotenv('../.env-pg', override=True)
 
 def get_db_connection():
-    conn = psycopg2.connect(os.environ.get("AIVEN_PG_URI"))
+    #conn = psycopg2.connect(os.environ.get("AIVEN_PG_URI"))
+    conn = psycopg2.connect(
+        host=os.environ.get('AIVEN_PG_HOST'),
+        port=os.environ.get('AIVEN_PG_PORT'),
+        dbname=os.environ.get('AIVEN_PG_DB_NAME'),
+        user=os.environ.get('AIVEN_PG_USER'),
+        password=os.environ.get('AIVEN_PG_PASSWORD')
+    )
     return conn
 
 def write_to_db(event):
@@ -49,6 +56,7 @@ def write_to_db(event):
     finally:
         cursor.close()
         conn.close()
+    print("Event stored to DB")
 
 def write_session_stats_to_db(session_id, stats):
     conn = get_db_connection()
@@ -78,3 +86,4 @@ def write_session_stats_to_db(session_id, stats):
     finally:
         cursor.close()
         conn.close()
+    print("Session stats stored to DB")

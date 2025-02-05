@@ -17,8 +17,12 @@ def execute_sql_file(filename):
     try:
         # Connect to PostgreSQL
         conn = psycopg2.connect(
-            os.getenv("AIVEN_PG_URI"),
-            sslmode="require"  # Aiven requires SSL
+            host=os.environ.get('AIVEN_PG_HOST'),
+            port=os.environ.get('AIVEN_PG_PORT'),
+            dbname=os.environ.get('AIVEN_PG_DB_NAME'),
+            user=os.environ.get('AIVEN_PG_USER'),
+            password=os.environ.get('AIVEN_PG_PASSWORD'),
+            sslmode="require"
         )
         cur = conn.cursor()
 

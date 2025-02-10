@@ -1,15 +1,4 @@
-# aiven-sa-assignment
-### Coding assignment for Aiven SA interview
-
-This is a solution to the Challenge 1: _Real time data pipeline_
-
-- Terraform script to setup the Aiven resources
-- Python script that will generate click stream data to Kafka
-- Stream the data to a script that calculates session level metrics and write it to PSQL
-  - Why not use Timescale for this? This is aggregate timeseries data after all and Aiven offers the Timescale open source add-in to PG as part of the offering. Implemented both as example.
-- Stream the data to Opensearch for search and visualization
-
----
+# Aiven Real-time Data Pipeline Example
 # Solution Design
 This example showcases how to setup a real-time data pipeline using Aiven services. The pipeline consists of the following components:
 - Kafka: To ingest the clickstream events
